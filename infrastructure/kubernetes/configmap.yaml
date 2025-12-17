@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  auth-events-topic-arn: "arn:aws:sns:us-east-1:123456789012:auth-events"
+  account-events-topic-arn: "arn:aws:sns:us-east-1:123456789012:account-events"
+  presence-updates-topic-arn: "arn:aws:sns:us-east-1:123456789012:presence-updates"
+  aws-region: "us-east-1"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: auth-secrets
+type: Opaque
+stringData:
+  jwt-secret: "your-256-bit-secret-key-change-in-production"

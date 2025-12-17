@@ -1,0 +1,23 @@
+{
+  "name": "playstation-examples",
+  "version": "1.0.0",
+  "description": "Monorepo for PlayStation Family Application and Microservices",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "echo 'Use specific service scripts'",
+    "build": "echo 'Use specific service scripts'",
+    "test": "echo 'Use specific service scripts'"
+  },
+  "keywords": [
+    "playstation",
+    "monorepo",
+    "microservices",
+    "react-native"
+  ],
+  "author": "",
+  "license": "ISC"
+}

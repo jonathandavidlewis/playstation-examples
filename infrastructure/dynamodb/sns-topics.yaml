@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: SNS Topics for PlayStation Family Application
+
+Resources:
+  AuthEventsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: auth-events
+      DisplayName: Authentication Events
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+  AccountEventsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: account-events
+      DisplayName: Account Events
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+  PresenceUpdatesTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: presence-updates
+      DisplayName: Presence Updates
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+  # Email subscription example (configure with actual email)
+  # AuthEventsEmailSubscription:
+  #   Type: AWS::SNS::Subscription
+  #   Properties:
+  #     Protocol: email
+  #     TopicArn: !Ref AuthEventsTopic
+  #     Endpoint: admin@example.com
+
+Outputs:
+  AuthEventsTopicArn:
+    Description: Auth Events Topic ARN
+    Value: !Ref AuthEventsTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-AuthEventsTopic'
+
+  AccountEventsTopicArn:
+    Description: Account Events Topic ARN
+    Value: !Ref AccountEventsTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-AccountEventsTopic'
+
+  PresenceUpdatesTopicArn:
+    Description: Presence Updates Topic ARN
+    Value: !Ref PresenceUpdatesTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-PresenceUpdatesTopic'
