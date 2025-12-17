@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # DynamoDB Local for development
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb -inMemory"
+    networks:
+      - playstation-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+      - AWS_REGION=us-east-1
+      - AWS_DYNAMODB_USERS_TABLE=users-table
+      - AWS_SNS_TOPIC_ARN=
+      - JWT_SECRET=your-development-secret-key-change-in-production
+      - JWT_EXPIRATION=3600000
+    depends_on:
+      - dynamodb-local
+    networks:
+      - playstation-network
+
+  # Accounts Service
+  accounts-service:
+    build:
+      context: ./services/accounts-service
+      dockerfile: Dockerfile
+    container_name: accounts-service
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - AWS_REGION=us-east-1
+      - DYNAMODB_TABLE=accounts-table
+      - SNS_TOPIC_ARN=
+    depends_on:
+      - dynamodb-local
+    networks:
+      - playstation-network
+
+  # Presence Service
+  presence-service:
+    build:
+      context: ./services/presence-service
+      dockerfile: Dockerfile
+    container_name: presence-service
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+      - AWS_REGION=us-east-1
+      - DYNAMODB_TABLE=presence-table
+      - SNS_TOPIC_ARN=
+    depends_on:
+      - dynamodb-local
+    networks:
+      - playstation-network
+
+networks:
+  playstation-network:
+    driver: bridge

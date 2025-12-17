@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DynamoDB Tables for PlayStation Family Application
+
+Resources:
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: users-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: EmailIndex
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+  AccountsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: accounts-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UsernameIndex
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+  PresenceTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: presence-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Application
+          Value: PlayStation-Family
+        - Key: Environment
+          Value: Production
+
+Outputs:
+  UsersTableName:
+    Description: Users Table Name
+    Value: !Ref UsersTable
+    Export:
+      Name: !Sub '${AWS::StackName}-UsersTable'
+
+  AccountsTableName:
+    Description: Accounts Table Name
+    Value: !Ref AccountsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-AccountsTable'
+
+  PresenceTableName:
+    Description: Presence Table Name
+    Value: !Ref PresenceTable
+    Export:
+      Name: !Sub '${AWS::StackName}-PresenceTable'
